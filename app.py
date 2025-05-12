@@ -46,13 +46,18 @@ def compress():
                 break
             quality -= 5  
             if quality < 10:  
-               
+                
                 width, height = image.size
                 image = image.resize((int(width * 0.9), int(height * 0.9)), Image.LANCZOS)
                 quality = initial_quality  
 
         compressed_io.seek(0)
-        return send_file(compressed_io, mimetype=f'image/{format}', as_attachment=True, attachment_filename=f'compressed_image.{format}')
+        return send_file(
+            compressed_io, 
+            mimetype=f'image/{format}', 
+            as_attachment=True, 
+            download_name=f'compressed_image.{format}'
+        )
 
     except Exception as e:
         print(f"Error: {e}")
@@ -64,7 +69,6 @@ def complain():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000, debug=True)
-
 
 
 
