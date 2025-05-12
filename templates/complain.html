@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complain Section</title>
+    <style>
+        .complain-section {
+            margin-top: 20px;
+            padding: 20px;
+            width: 400px;
+            margin: 60px auto;
+            height: auto;
+            background-color: silver;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .complain-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .complain-section form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: auto;
+        }
+
+        .complain-section input,
+        .complain-section textarea {
+            width: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px; 
+        }
+
+        .complain-section button {
+            padding: 10px;
+            border: none;
+            background-color: blue;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .complain-section button:hover {
+            background-color: lightblue;
+            transform: scale(1.05);
+        }
+        .b1{
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="complain-section">
+        <h2>Complain Section</h2>
+        <form id="complainForm">
+            <input type="email" id="complainEmail" placeholder="Your Email" required>
+            <textarea id="complainMessage" placeholder="Your Message" rows="4" required></textarea>
+            <button type="submit">Submit Complain</button>
+        </form>
+    </div>
+    <div class =b1>
+        <button onclick="window.location.href='http://127.0.0.1:5000'">Back to Home</button>
+    </div>
+
+    <script>
+        document.getElementById('complainForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('complainEmail').value;
+            const message = document.getElementById('complainMessage').value;
+
+            if (email && message) {
+                alert('Complain submitted successfully!');
+                // Here you can add code to send the complain to the server
+            } else {
+                alert('Please fill in both fields.');
+            }
+        });
+    </script>  
+</body>
+</html>
