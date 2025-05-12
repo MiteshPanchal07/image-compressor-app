@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <title>Image Compressor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #b4e3ed, #e9e4e0);
+            color: #333;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: #333;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .image-item {
+            position: relative;
+            margin-bottom: 20px;
+            animation: bounceIn 0.5s;
+        }
+
+        @keyframes bounceIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .image-item img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+
+        .actions button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .actions button:hover {
+            background-color: #45a049;
+            transform: scale(1.1);
+        }
+
+        .actions .delete-btn {
+            background-color: #f44336;
+        }
+
+        .actions .delete-btn:hover {
+            background-color: #d32f2f;
+            transform: scale(1.1);
+        }
+
+        .actions .download-btn {
+            background-color: #008CBA;
+            display: inline-block;
+            padding: 10px 20px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .actions .download-btn:hover {
+            background-color: #005F73;
+            transform: scale(1.1);
+        }
+
+        .animate-button {
+            animation: bounce 0.3s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .size-input {
+            width: 150px;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .loading span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 2px;
+            background-color: #333;
+            border-radius: 50%;
+            animation: loading 0.6s infinite alternate;
+        }
+
+        @keyframes loading {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-10px);
+            }
+        }
+
+        .loading span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="font-family: Sofia, sans-serif; text-shadow: 3px 3px 3px #ababab;">Image Compressor</h1>
+            <p>Compress your images easily and quickly with our online tool.
+                <br>Just drag and drop your images below or click to upload.
+            </p>
+        </div>
+        <div class="upload-area" id="uploadArea">
+            Drag and drop your images here or click to upload
+        </div>
+        <input type="file" id="fileInput" multiple style="display: none;">
+        <div class="image-container" id="imageContainer"></div>
+        <div class="instructions">
+            <h2>How to Use:</h2>
+            <ol style="text-align: left; font-style:oblique;">
+                <li>Click on the upload area or drag and drop your images into the upload area.</li>
+                <li>Select the desired compression size from the dropdown menu next to each image.</li>
+                <li>Click the "Compress" button to start the compression process.</li>
+                <li>Once the compression is complete, a "Download Compressed Image" button will appear.</li>
+                <li>Click the "Download Compressed Image" button to download the compressed image to your device.</li>
+            </ol>
+        </div>
+        <div class="footer">
+            <p>&copy; 2025 Image Compressor. All rights reserved.</p>
+            Created by<b> Mitesh Panchal </b>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const imageContainer = document.getElementById('imageContainer');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'green';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#ddd';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ddd';
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+        function handleFiles(files) {
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageItem = document.createElement('div');
+                    imageItem.classList.add('image-item');
+                    imageItem.innerHTML = `
+                <img src="${e.target.result}" alt="${file.name}">
+                <div class="actions">
+                    <select class="size-input">
+                        <option value="1-50">1 - 50 KB</option>
+                        <option value="100-500">100 - 500 KB</option>
+                        <option value="500kb-1mb">500 KB - 1 MB</option>
+                        <option value="1mb-3mb">1 MB - 3 MB</option>
+                    </select>
+                    <button onclick="compressImage('${file.name}', '${e.target.result}', this)">Compress</button>
+                    <button class="delete-btn" onclick="deleteImage(this)">Delete</button>
+                </div>
+                <div class="loading">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="download-link"></div>
+            `;
+                    imageContainer.appendChild(imageItem);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function deleteImage(element) {
+            element.parentElement.parentElement.remove();
+        }
+
+        function compressImage(fileName, fileDataUrl, button) {
+            button.classList.add('animate-button');
+            const formData = new FormData();
+            const sizeInput = button.previousElementSibling;
+            const size = sizeInput.value;
+            formData.append('image', dataURLtoBlob(fileDataUrl), fileName);
+            formData.append('size', size);
+
+            const loading = button.parentElement.nextElementSibling;
+            const downloadLink = loading.nextElementSibling;
+            loading.style.display = 'inline-block';
+            downloadLink.innerHTML = '';
+
+            fetch('/compress', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const downloadBtn = document.createElement('a');
+                    downloadBtn.href = url;
+                    downloadBtn.download = `compressed_${fileName}`;
+                    downloadBtn.textContent = 'Download Compressed Image';
+                    downloadBtn.classList.add('download-btn');
+                    downloadBtn.classList.add('animate-button');
+                    downloadLink.appendChild(downloadBtn);
+                    setTimeout(() => downloadBtn.classList.remove('animate-button'), 500);
+                    loading.style.display = 'none';
+                });
+        }
+
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], { type: mime });
+        }
+    </script>
+    <a href="/complain" class="download-btn">Go to Complain Page</a>
+</body>
+
+</html>
